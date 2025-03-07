@@ -11,16 +11,26 @@ router.post("/register", async (req, res) => {
   let password = req.body.password;
   let name = req.body.name;
 
-  const user = new User({
-    name: name,
-    email: email,
-    password: password,
-  });
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(password, salt);
 
-  const result = await user.save();
-  res.json({
-    user: result,
-  });
+  const record = await User.findOne({ email: email });
+
+  if (record) {
+    return res.status(400).send({ message: "Email is already registered" });
+  } else {
+    const user = new User({
+      name: name,
+      email: email,
+      password: hashedPassword,
+      // password: password,
+    });
+
+    const result = await user.save();
+    res.json({
+      user: result,
+    });
+  }
 });
 
 router.post("/login", async (req, res) => {
