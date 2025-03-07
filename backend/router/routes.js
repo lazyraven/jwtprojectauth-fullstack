@@ -27,9 +27,19 @@ router.post("/register", async (req, res) => {
     });
 
     const result = await user.save();
-    res.json({
-      user: result,
+
+    // after generate id created token
+    const { id } = await result.toJSON();
+    const token = jwt.sign({ _id: _id }, "secret");
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
     });
+
+    res.send({ message: "Success" });
+    // res.json({
+    //   user: result,
+    // });
   }
 });
 
