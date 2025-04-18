@@ -19,6 +19,8 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
+    // this is very important propery if we don't add this your project will not work.
+    "strictPropertyInitialization":false,
     "lib": [
       "ES2022",
       "dom"
