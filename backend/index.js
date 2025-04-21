@@ -28,7 +28,7 @@ app.use("/api", routes);
 
 mongoose
   .connect("mongodb://localhost:27017/jwtproject", {
-    useNewUrlParser: true,
+    // useNewUrlParser: true,
   })
   .then(() => {
     console.log("connected to database");
