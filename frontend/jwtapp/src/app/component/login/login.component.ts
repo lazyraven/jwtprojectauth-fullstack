@@ -32,7 +32,7 @@ export class LoginComponent {
   submit(): void {
     let user = this.form.getRawValue()
     console.log("user", user);
-    if (user.name == "" || user.email == "" || user.password == "") {
+    if (user.email == "" || user.password == "") {
       alert("please enter all the fields.")
     } else if (!this.ValidateEmail(user.email)) {
       alert("please enter a valid email.")

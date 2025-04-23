@@ -23,11 +23,25 @@ router.post("/register", async (req, res) => {
     const user = new User({
       name: name,
       email: email,
-      // password: hashedPassword,
-      password: password,
+      password: hashedPassword,
+      // password: password,
     });
 
     const result = await user.save();
+    // if you want to see result in json format
+    // add this line of code 33-35
+    // res.json({
+    //   user: result,
+    // });
+    // {
+    //   "user": {
+    //       "name": "gdfgdfg",
+    //       "email": "dfgdfgj@gmail.com",
+    //       "password": "$2b$10$nZlDlVJ7.OG3RuojahSG8efs63L/XBp7e2/mGfMtLIVNTnpOTXMN.",
+    //       "_id": "6808588d1b5df5ca2486a7ed",
+    //       "__v": 0
+    //   }
+    // }
 
     // after generate id created token
     const { _id } = await result.toJSON();
@@ -71,18 +85,26 @@ router.post("/login", async (req, res) => {
 
 router.get("/user", async (req, res) => {
   try {
+    // checking the cookie JWT token whether it is present inside the user browser or not
     const cookie = req.cookies["jwt"];
     const claims = jwt.verify(cookie, "secret");
 
+    // if the token is not correct
     if (!claims) {
+      console.log("claims");
+
       return res.status(401).send({
         message: "unauthenticated",
       });
     }
+
+    // simply finding the details of the user and sending the detais about the user
     const user = await User.findOne({ _id: claims._id });
     const { password, ...data } = await user.toJSON();
     res.send(data);
   } catch (err) {
+    console.log("err");
+
     return res.status(401).send({
       message: "unauthenticated",
     });
